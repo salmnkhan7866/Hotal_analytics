@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Hotel Analytics{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+{% if session.get('user_id') %}
+<nav>
+  <span class="brand">🏨 Hotel Analytics</span>
+  <a href="{{ url_for('dashboard') }}">Dashboard</a>
+  <a href="{{ url_for('rooms') }}">Rooms</a>
+  <a href="{{ url_for('customers') }}">Customers</a>
+  <a href="{{ url_for('bookings') }}">Bookings</a>
+  <a href="{{ url_for('upload') }}">Upload</a>
+  <a href="{{ url_for('analytics') }}">Analytics</a>
+  <a href="{{ url_for('prediction') }}">Prediction</a>
+  <a href="{{ url_for('history') }}">History</a>
+  <a href="{{ url_for('reports') }}">Reports</a>
+  <span class="right">{{ session['username'] }} ({{ session['role'] }}) · <a href="{{ url_for('logout') }}">Logout</a></span>
+</nav>
+{% endif %}
+<main>
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% for category, message in messages %}<div class="flash {{ category }}">{{ message }}</div>{% endfor %}
+  {% endwith %}
+  {% block content %}{% endblock %}
+</main>
+{% block scripts %}{% endblock %}
+</body>
+</html>

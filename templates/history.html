@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Prediction history{% endblock %}
+{% block content %}
+<h1>Prediction History (audit log)</h1>
+<div class="card">
+  <form method="get"><label>Filter by risk</label>
+    <select name="risk" onchange="this.form.submit()">
+      <option value="">All</option>
+      {% for r in ['High', 'Medium', 'Low'] %}<option {{ 'selected' if r == selected }}>{{ r }}</option>{% endfor %}
+    </select></form>
+</div>
+<div class="card scroll">
+  <p class="muted">Every prediction is stored with a timestamp. Showing the latest 300.</p>
+  <table>
+    <tr><th>Time</th><th>Booking</th><th>Guest</th><th>Room</th><th>Check-in</th><th>Status now</th><th>Probability</th><th>Risk</th><th>Model</th></tr>
+    {% for r in rows %}
+    <tr><td>{{ r.created_at }}</td><td>#{{ r.booking_id }}</td><td>{{ r.customer_name }}</td><td>{{ r.room_no }}</td>
+        <td>{{ r.check_in }}</td><td><span class="badge {{ r.booking_status }}">{{ r.booking_status }}</span></td>
+        <td>{{ (r.cancellation_probability * 100) | round(1) }}%</td>
+        <td><span class="badge {{ r.risk_level }}">{{ r.risk_level }}</span></td><td>{{ r.model_name }}</td></tr>
+    {% else %}<tr><td colspan="9" class="muted">Nothing here yet.</td></tr>
+    {% endfor %}
+  </table>
+</div>
+{% endblock %}

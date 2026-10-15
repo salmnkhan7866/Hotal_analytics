@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Customers{% endblock %}
+{% block content %}
+<h1>Customer Management</h1>
+<div class="card">
+  <h2>Add customer</h2>
+  <form method="post" class="form-row">
+    <div><label>Name</label><input name="name" required></div>
+    <div><label>Country</label><input name="country" required></div>
+    <div><label>Type</label><select name="customer_type">{% for t in types %}<option>{{ t }}</option>{% endfor %}</select></div>
+    <button type="submit">Add</button>
+  </form>
+</div>
+<div class="card scroll">
+  <p class="muted">Showing the latest 300 customers.</p>
+  <table>
+    <tr><th>ID</th><th>Name</th><th>Country</th><th>Type</th></tr>
+    {% for c in customers %}<tr><td>{{ c.customer_id }}</td><td>{{ c.name }}</td><td>{{ c.country }}</td><td>{{ c.customer_type }}</td></tr>{% endfor %}
+  </table>
+</div>
+{% endblock %}

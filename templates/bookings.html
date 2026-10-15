@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Bookings{% endblock %}
+{% block content %}
+<h1>Bookings</h1>
+<div class="card form-row">
+  <form method="get" class="form-row">
+    <div><label>Filter by status</label>
+      <select name="status" onchange="this.form.submit()">
+        <option value="">All</option>
+        {% for s in statuses %}<option {{ 'selected' if s == selected }}>{{ s }}</option>{% endfor %}
+      </select></div>
+  </form>
+  <a class="btn" href="{{ url_for('booking_new') }}">+ New booking</a>
+</div>
+<div class="card scroll">
+  <p class="muted">Showing the latest 200 bookings by check-in date.</p>
+  <table>
+    <tr><th>ID</th><th>Guest</th><th>Room</th><th>Check-in</th><th>Check-out</th><th>Amount</th><th>Status</th><th>Risk</th><th>Actions</th></tr>
+    {% for b in bookings %}
+    <tr>
+      <td>{{ b.booking_id }}</td><td>{{ b.customer_name }}</td><td>{{ b.room_no }} ({{ b.room_type }})</td>
+      <td>{{ b.check_in }}</td><td>{{ b.check_out }}</td><td>{{ '%.0f' | format(b.total_amount) }}</td>
+      <td><span class="badge {{ b.booking_status }}">{{ b.booking_status }}</span></td>
+      <td>{% if b.risk_level %}<span class="badge {{ b.risk_level }}">{{ b.risk_level }}</span>{% else %}-{% endif %}</td>
+      <td>
+        {% if b.booking_status == 'Confirmed' %}
+        <form method="post" action="{{ url_for('prediction_one', booking_id=b.booking_id) }}" style="display:inline"><button class="small gray">Predict</button></form>
+        <form method="post" action="{{ url_for('booking_status', booking_id=b.booking_id) }}" style="display:inline">
+          <input type="hidden" name="status" value="Cancelled"><button class="small red">Cancel</button></form>
+        <form method="post" action="{{ url_for('booking_status', booking_id=b.booking_id) }}" style="display:inline">
+          <input type="hidden" name="status" value="Completed"><button class="small green">Complete</button></form>
+        {% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>
+{% endblock %}

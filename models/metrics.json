@@ -1,0 +1,42 @@
+{
+  "best": "Logistic Regression",
+  "results": [
+    {
+      "name": "Logistic Regression",
+      "accuracy": 0.699,
+      "precision": 0.637,
+      "recall": 0.426,
+      "f1": 0.511,
+      "confusion_matrix": [
+        [
+          249,
+          41
+        ],
+        [
+          97,
+          72
+        ]
+      ]
+    },
+    {
+      "name": "Random Forest",
+      "accuracy": 0.673,
+      "precision": 0.577,
+      "recall": 0.42,
+      "f1": 0.486,
+      "confusion_matrix": [
+        [
+          238,
+          52
+        ],
+        [
+          98,
+          71
+        ]
+      ]
+    }
+  ],
+  "train_rows": 1377,
+  "test_rows": 459,
+  "trained_at": "2026-10-15 12:00"
+}

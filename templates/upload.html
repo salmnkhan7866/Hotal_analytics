@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Upload{% endblock %}
+{% block content %}
+<h1>Upload Bookings (CSV)</h1>
+<div class="card">
+  <form method="post" enctype="multipart/form-data" class="form-row">
+    <div><label>CSV file (max 2 MB)</label><input type="file" name="file" accept=".csv" required></div>
+    <button type="submit">Upload</button>
+  </form>
+  <p class="muted">Required columns: customer_name, country, customer_type, room_no, check_in, check_out, booking_date, booking_status.<br>
+  Dates: YYYY-MM-DD. customer_type: Online / Corporate / Walk-in / Repeat. booking_status: Confirmed / Cancelled / Completed.</p>
+  <a href="{{ url_for('static', filename='sample_upload.csv') }}" download>Download sample CSV</a>
+</div>
+{% if result and result[1] %}
+<div class="card"><h2>Rows skipped</h2>
+  <ul>{% for e in result[1] %}<li>{{ e }}</li>{% endfor %}</ul></div>
+{% endif %}
+{% endblock %}

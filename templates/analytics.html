@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Analytics{% endblock %}
+{% block content %}
+<h1>Revenue & Cancellation Analytics</h1>
+<div class="card form-row">
+  <div><label>Check-in from</label><input type="date" id="start"></div>
+  <div><label>Check-in to</label><input type="date" id="end"></div>
+  <button onclick="apply()">Apply filter</button>
+  <button class="gray" onclick="resetFilter()">Reset</button>
+</div>
+<div class="kpis">
+  <div class="kpi"><small>Total bookings</small><b id="kpi-total_bookings">-</b></div>
+  <div class="kpi"><small>Cancellation rate</small><b id="kpi-cancel_rate">-</b></div>
+  <div class="kpi"><small>Occupancy</small><b id="kpi-occupancy">-</b></div>
+  <div class="kpi"><small>ADR</small><b id="kpi-adr">-</b></div>
+  <div class="kpi"><small>Revenue</small><b id="kpi-revenue">-</b></div>
+  <div class="kpi"><small>Avg lead time</small><b id="kpi-avg_lead_time">-</b></div>
+</div>
+
+<h2>1. Descriptive analytics - what happened?</h2>
+<div class="grid g2">
+  <div class="card"><h2>Occupancy trend (%)</h2><div class="chart-box"><canvas id="chart-occupancy"></canvas></div></div>
+  <div class="card"><h2>Revenue by room type</h2><div class="chart-box"><canvas id="chart-revenue"></canvas></div></div>
+  <div class="card"><h2>Customer origin (top countries)</h2><div class="chart-box"><canvas id="chart-origin"></canvas></div></div>
+  <div class="card"><h2>Cancellation rate by month</h2><div class="chart-box"><canvas id="chart-cancel-trend"></canvas></div></div>
+</div>
+
+<h2>2. Diagnostic analytics - why do guests cancel?</h2>
+<div class="grid g2">
+  <div class="card"><h2>Cancellation % by booking lead time</h2><div class="chart-box"><canvas id="chart-cancel-lead"></canvas></div>
+    <p class="muted">Lead time = days between booking date and check-in.</p></div>
+  <div class="card"><h2>Cancellation % by customer type</h2><div class="chart-box"><canvas id="chart-cancel-type"></canvas></div></div>
+</div>
+<p class="muted">3. Predictive analytics (what may happen next) is on the Prediction page.</p>
+{% endblock %}
+{% block scripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="{{ url_for('static', filename='charts.js') }}"></script>
+<script>
+  function apply() { loadAnalytics(document.getElementById('start').value, document.getElementById('end').value); }
+  function resetFilter() { document.getElementById('start').value = ''; document.getElementById('end').value = ''; loadAnalytics(); }
+  loadAnalytics();
+</script>
+{% endblock %}

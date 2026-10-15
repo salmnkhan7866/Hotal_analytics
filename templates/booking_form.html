@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}New booking{% endblock %}
+{% block content %}
+<h1>New Booking</h1>
+<div class="card">
+  <form method="post" class="form-col">
+    <div><label>Customer (add new ones on the Customers page)</label>
+      <select name="customer_id" required>
+        {% for c in customers %}<option value="{{ c.customer_id }}">{{ c.name }} - {{ c.country }}</option>{% endfor %}
+      </select></div>
+    <div><label>Room</label>
+      <select name="room_id" required>
+        {% for r in rooms if r.status == 'Available' %}<option value="{{ r.room_id }}">{{ r.room_no }} - {{ r.room_type }} ({{ r.price }}/night)</option>{% endfor %}
+      </select></div>
+    <div><label>Check-in</label><input type="date" name="check_in" required></div>
+    <div><label>Check-out</label><input type="date" name="check_out" required></div>
+    <div><label>Booking date</label><input type="date" name="booking_date" value="{{ today }}" required></div>
+    <button type="submit">Save booking</button>
+  </form>
+</div>
+{% endblock %}

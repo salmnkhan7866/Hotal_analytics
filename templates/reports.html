@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Reports{% endblock %}
+{% block content %}
+<h1>Reports</h1>
+<div class="card"><a class="btn" href="{{ url_for('export_csv') }}">⬇ Download all bookings (CSV)</a></div>
+<div class="card scroll">
+  <h2>Revenue summary by room type</h2>
+  <table>
+    <tr><th>Room type</th><th>Bookings</th><th>Cancelled</th><th>Cancel rate</th><th>Revenue</th><th>ADR</th></tr>
+    {% for r in room_rows %}
+    <tr><td>{{ r.room_type }}</td><td>{{ r.bookings }}</td><td>{{ r.cancelled }}</td><td>{{ r.cancel_rate }}%</td>
+        <td>{{ '{:,.0f}'.format(r.revenue) }}</td><td>{{ r.adr }}</td></tr>
+    {% endfor %}
+  </table>
+  <p class="muted">Revenue and ADR count only non-cancelled bookings. ADR = revenue ÷ room-nights sold.</p>
+</div>
+<div class="card scroll">
+  <h2>Customer origin</h2>
+  <table>
+    <tr><th>Country</th><th>Bookings</th><th>Cancelled</th><th>Cancel rate</th></tr>
+    {% for r in country_rows %}<tr><td>{{ r.country }}</td><td>{{ r.bookings }}</td><td>{{ r.cancelled }}</td><td>{{ r.cancel_rate }}%</td></tr>{% endfor %}
+  </table>
+</div>
+{% endblock %}

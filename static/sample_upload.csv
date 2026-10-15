@@ -1,0 +1,4 @@
+customer_name,country,customer_type,room_no,check_in,check_out,booking_date,booking_status
+Test Guest,India,Online,101,2027-03-01,2027-03-04,2027-01-10,Confirmed
+Another Guest,UK,Corporate,102,2027-03-05,2027-03-07,2027-03-01,Confirmed
+Bad Row,UK,Vacation,102,2027-04-05,2027-04-07,2027-03-01,Confirmed

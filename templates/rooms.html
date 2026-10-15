@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Rooms{% endblock %}
+{% block content %}
+<h1>Room Management</h1>
+{% if session['role'] == 'admin' %}
+<div class="card">
+  <h2>Add room</h2>
+  <form method="post" class="form-row">
+    <div><label>Room no</label><input name="room_no" required></div>
+    <div><label>Type</label><select name="room_type">{% for t in room_types %}<option>{{ t }}</option>{% endfor %}</select></div>
+    <div><label>Price / night</label><input name="price" type="number" step="0.01" min="1" required></div>
+    <button type="submit">Add</button>
+  </form>
+</div>
+{% endif %}
+<div class="card scroll">
+  <table>
+    <tr><th>Room</th><th>Type</th><th>Price</th><th>Status</th>{% if session['role'] == 'admin' %}<th>Edit</th>{% endif %}</tr>
+    {% for r in rooms %}
+    <tr>
+      <td>{{ r.room_no }}</td><td>{{ r.room_type }}</td><td>{{ r.price }}</td>
+      <td><span class="badge {{ r.status }}">{{ r.status }}</span></td>
+      {% if session['role'] == 'admin' %}
+      <td>
+        <form method="post" action="{{ url_for('room_update', room_id=r.room_id) }}" class="form-row" style="display:inline-flex">
+          <input name="price" type="number" step="0.01" value="{{ r.price }}" style="width:80px">
+          <select name="status">
+            <option {{ 'selected' if r.status == 'Available' }}>Available</option>
+            <option {{ 'selected' if r.status == 'Maintenance' }}>Maintenance</option>
+          </select>
+          <button class="small">Save</button>
+        </form>
+        <form method="post" action="{{ url_for('room_delete', room_id=r.room_id) }}" style="display:inline"
+              onsubmit="return confirm('Delete this room?')"><button class="small red">Delete</button></form>
+      </td>
+      {% endif %}
+    </tr>
+    {% endfor %}
+  </table>
+</div>
+{% endblock %}

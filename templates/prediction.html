@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Prediction{% endblock %}
+{% block content %}
+<h1>Cancellation Prediction</h1>
+<div class="card form-row">
+  <form method="post" action="{{ url_for('prediction_train') }}"><button>1. Train models</button></form>
+  <form method="post" action="{{ url_for('prediction_run') }}"><button class="green">2. Score all upcoming bookings</button></form>
+</div>
+
+{% if info %}
+<div class="card scroll">
+  <h2>Model comparison</h2>
+  <p class="muted">Trained {{ info.trained_at }} · {{ info.train_rows }} training rows / {{ info.test_rows }} test rows ·
+     Best model (highest F1): <b>{{ info.best }}</b></p>
+  <table>
+    <tr><th>Model</th><th>Accuracy</th><th>Precision</th><th>Recall</th><th>F1</th><th>Confusion matrix</th></tr>
+    {% for m in info.results %}
+    <tr>
+      <td>{{ m.name }}{% if m.name == info.best %} ⭐{% endif %}</td>
+      <td>{{ m.accuracy }}</td><td>{{ m.precision }}</td><td>{{ m.recall }}</td><td>{{ m.f1 }}</td>
+      <td>
+        <table class="cm" style="width:auto">
+          <tr><td></td><td>Pred: Stay</td><td>Pred: Cancel</td></tr>
+          <tr><td>Actual: Stay</td><td>{{ m.confusion_matrix[0][0] }}</td><td>{{ m.confusion_matrix[0][1] }}</td></tr>
+          <tr><td>Actual: Cancel</td><td>{{ m.confusion_matrix[1][0] }}</td><td>{{ m.confusion_matrix[1][1] }}</td></tr>
+        </table>
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+  <p class="muted">Precision: of bookings flagged as cancellations, how many really cancelled. Recall: of real cancellations, how many we caught.</p>
+</div>
+{% else %}
+<div class="card"><p>No model yet. Click <b>Train models</b>.</p></div>
+{% endif %}
+
+<div class="card scroll">
+  <h2>Risky bookings (highest cancellation probability)</h2>
+  {% if risky %}
+  <table>
+    <tr><th>Booking</th><th>Guest</th><th>Room</th><th>Check-in</th><th>Amount</th><th>Probability</th><th>Risk</th><th>Scored at</th></tr>
+    {% for r in risky %}
+    <tr><td>#{{ r.booking_id }}</td><td>{{ r.customer_name }}</td><td>{{ r.room_no }}</td><td>{{ r.check_in }}</td>
+        <td>{{ '%.0f' | format(r.total_amount) }}</td>
+        <td>{{ (r.cancellation_probability * 100) | round(1) }}%</td>
+        <td><span class="badge {{ r.risk_level }}">{{ r.risk_level }}</span></td><td>{{ r.created_at }}</td></tr>
+    {% endfor %}
+  </table>
+  {% else %}<p class="muted">No scored bookings yet.</p>{% endif %}
+</div>
+{% endblock %}
